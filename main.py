@@ -56,8 +56,9 @@ def fetch_video(job_id):
     url = data['data'][0]['url']
     return url
 
-def send_data(audio_link, text, name, preset):
-    audio_link = audio_link.split("\n")
+def send_data(audio_link1, audio_link2, text, name, preset):
+    audio_link1 = audio_link1.split("\n")
+    audio_link2 = audio_link2.split("\n")
     url = "https://mango.sievedata.com/v1/push"
     
     headers = {
@@ -67,8 +68,11 @@ def send_data(audio_link, text, name, preset):
     data = {
         "workflow_name": name,
         "inputs": {
-            "audio": {
-                "url": audio_link[0]
+            "audio1": {
+                "url": audio_link1[0]
+                },
+            "audio2": {
+                "url": audio_link2[0]
                 },
             "text": text,
             "preset": preset
@@ -85,7 +89,9 @@ def send_data(audio_link, text, name, preset):
 
 #Streamlit App
 
-audio_in = st.file_uploader("Audio Upload (.wav only)", type='.wav')
+audio_in1 = st.file_uploader("Upload first audio sample (.wav only)", type='.wav')
+
+audio_in2 = st.file_uploader("Upload second audio sample (.wav only)", type='.wav')
 
 text_in = st.text_input('Text input', max_chars=500)
 
@@ -118,13 +124,17 @@ if st.session_state.get('button') != True:
 
 if st.session_state['button'] == True:
 
-    if audio_in:
+    if audio_in1 and audio_in2:
         with NamedTemporaryFile(dir='.', suffix='.wav', delete=False) as f:
-            f.write(audio_in.getbuffer())
-            audio_url = upload_local(f.name)
+            f.write(audio_in1.getbuffer())
+            audio_url1 = upload_local(f.name)
+            f.close()
+        with NamedTemporaryFile(dir='.', suffix='.wav', delete=False) as f:
+            f.write(audio_in2.getbuffer())
+            audio_url2 = upload_local(f.name)
             f.close()
 
-    job = send_data(audio_url, text_in, workflow_name, preset)
+    job = send_data(audio_url1, audio_url2, text_in, workflow_name, preset)
     if job:
         if preset != 'ultra_fast':
             st.write("This could take a while :)")
