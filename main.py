@@ -74,7 +74,6 @@ def send_data(audio_link, text, name):
             "text": text
             }
         }
-    st.write(data)
     try:
         response = requests.post(url, headers=headers, json=data)
         if ('id') not in response.json():
