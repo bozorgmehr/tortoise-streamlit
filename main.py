@@ -96,7 +96,7 @@ workflow_name = "custom_tortoise_tts"
 
 preset = "ultra_fast"
 
-if st.checkbox("Advanced options (experimental)"):
+if st.checkbox("Advanced settings (experimental)"):
     st.code('''         presets = {
             #recommended, by far the fastest with decent performance
             'ultra_fast': {'num_autoregressive_samples': 16, 'diffusion_iterations': 30, 'cond_free': False},
@@ -126,6 +126,8 @@ if st.session_state['button'] == True:
 
     job = send_data(audio_url, text_in, workflow_name, preset)
     if job:
+        if preset != 'ultra_fast':
+            st.write("This could take a while :)")
         with st.spinner("Processing audio"):
             status = check_status('https://mango.sievedata.com/v1/jobs', 5, str(job))
             if status == True:
