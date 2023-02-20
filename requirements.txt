@@ -1,0 +1,4 @@
+requests
+transfersh-client
+pyperclip
+wget
