@@ -34,16 +34,17 @@ def check_status(url, interval, job_id):
         data = response.json()['data']
         for job in data:
             if job['id'] == job_id:
-                print(job['status'])
+               
                 if job['status'] == 'processing':
-                    print("processing")
+              
                     time.sleep(interval)
                 if job['status'] == 'finished':
-                    print("finished")
+                   
                     finished = True
                     return finished
                 if job['status'] == 'error':
                     st.error("An error occured, please try again. If the error persists, please inform the developers.")
+                    print(job['error'])
                     return job['error']
 
 def fetch_video(job_id):
