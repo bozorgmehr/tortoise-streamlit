@@ -111,7 +111,7 @@ if st.session_state['button'] == True:
         
     job = send_data(audio_url, text_in, workflow_name)
     if job:
-        with st.spinner("Processing video"):
+        with st.spinner("Processing audio"):
             status = check_status('https://mango.sievedata.com/v1/jobs', 5, str(job))
             if status == True:
                 audio = fetch_video(job)
